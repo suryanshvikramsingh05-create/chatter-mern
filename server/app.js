@@ -30,14 +30,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/chats', chatRoutes);
 app.use('/api/messages', messageRoutes);
 
-if (process.env.NODE_ENV === 'production') {
-  const clientDist = path.join(__dirname, '..', 'client', 'dist');
-  app.use(express.static(clientDist));
-  app.get(/^(?!\/api|\/uploads).*/, (req, res) => {
-    res.sendFile(path.join(clientDist, 'index.html'));
-  });
-}
-
 app.use(notFound);
 app.use(errorHandler);
 
