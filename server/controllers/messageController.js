@@ -12,6 +12,11 @@ const sendMessage = async (req, res, next) => {
       return res.status(400).json({ message: 'content and chatId are required' });
     }
 
+    const chatExists = await Chat.exists({ _id: chatId, users: req.user._id });
+    if (!chatExists) {
+      return res.status(403).json({ message: 'Not authorized to post in this chat' });
+    }
+
     let message = await Message.create({
       sender: req.user._id,
       content,
@@ -35,6 +40,11 @@ const allMessages = async (req, res, next) => {
     const { chatId } = req.params;
     const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
     const limit = Math.min(parseInt(req.query.limit, 10) || DEFAULT_PAGE_SIZE, 100);
+
+    const chatExists = await Chat.exists({ _id: chatId, users: req.user._id });
+    if (!chatExists) {
+      return res.status(403).json({ message: 'Not authorized to view this chat' });
+    }
 
     const totalCount = await Message.countDocuments({ chat: chatId });
 

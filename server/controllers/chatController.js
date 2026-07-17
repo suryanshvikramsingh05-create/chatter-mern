@@ -133,6 +133,9 @@ const removeFromGroup = async (req, res, next) => {
     if (chat.groupAdmin.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Only the group admin can remove members' });
     }
+    if (chat.groupAdmin.toString() === userId) {
+      return res.status(400).json({ message: 'The group admin cannot be removed' });
+    }
 
     const updatedChat = await Chat.findByIdAndUpdate(
       chatId,
