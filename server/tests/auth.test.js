@@ -84,6 +84,35 @@ describe('POST /api/auth/login', () => {
   });
 });
 
+describe('POST /api/auth/guest', () => {
+  it('creates a distinct guest account and returns a token', async () => {
+    const res = await request(app).post('/api/auth/guest').send({});
+
+    expect(res.status).toBe(201);
+    expect(res.body.token).toBeDefined();
+    expect(res.body.isGuest).toBe(true);
+    expect(res.body.password).toBeUndefined();
+  });
+
+  it('gives each guest a unique account', async () => {
+    const first = await request(app).post('/api/auth/guest').send({});
+    const second = await request(app).post('/api/auth/guest').send({});
+
+    expect(first.body._id).not.toBe(second.body._id);
+    expect(first.body.username).not.toBe(second.body.username);
+  });
+
+  it('lets a guest use protected routes immediately', async () => {
+    const guest = await request(app).post('/api/auth/guest').send({});
+
+    const res = await request(app)
+      .get('/api/chats')
+      .set('Authorization', `Bearer ${guest.body.token}`);
+
+    expect(res.status).toBe(200);
+  });
+});
+
 describe('protected routes', () => {
   it('rejects requests with no token', async () => {
     const res = await request(app).get('/api/chats');

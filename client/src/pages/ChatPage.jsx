@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
+import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import ChatList from '../components/ChatList';
@@ -167,6 +168,11 @@ const ChatPage = () => {
   return (
     <div className="chat-page">
       <aside className="sidebar">
+        {user.isGuest && (
+          <div className="guest-banner">
+            Browsing as a guest — <Link to="/register">sign up</Link> to keep your chats.
+          </div>
+        )}
         <div className="sidebar-header">
           <label className="avatar-upload">
             {getAvatarUrl(user.pic) ? (

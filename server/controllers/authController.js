@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const User = require('../models/User');
 const generateToken = require('../config/generateToken');
 
@@ -53,4 +54,28 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+const guestLogin = async (req, res, next) => {
+  try {
+    const suffix = crypto.randomBytes(4).toString('hex');
+
+    const user = await User.create({
+      username: `Guest-${suffix}`,
+      email: `guest-${suffix}@guest.chatter.local`,
+      password: crypto.randomBytes(16).toString('hex'),
+      isGuest: true,
+    });
+
+    res.status(201).json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      pic: user.pic,
+      isGuest: true,
+      token: generateToken(user._id),
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { registerUser, loginUser, guestLogin };

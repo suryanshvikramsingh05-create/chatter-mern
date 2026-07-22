@@ -23,6 +23,13 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  const continueAsGuest = async () => {
+    const { data } = await api.post('/api/auth/guest');
+    localStorage.setItem('chatterUser', JSON.stringify(data));
+    setUser(data);
+    return data;
+  };
+
   const logout = () => {
     localStorage.removeItem('chatterUser');
     setUser(null);
@@ -37,7 +44,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, login, register, logout, updateUser, continueAsGuest }}>
       {children}
     </AuthContext.Provider>
   );

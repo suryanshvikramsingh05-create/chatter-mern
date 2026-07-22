@@ -6,7 +6,8 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const [guestLoading, setGuestLoading] = useState(false);
+  const { login, continueAsGuest } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -17,6 +18,19 @@ const LoginPage = () => {
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
+    }
+  };
+
+  const handleGuest = async () => {
+    setError('');
+    setGuestLoading(true);
+    try {
+      await continueAsGuest();
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Could not start a guest session');
+    } finally {
+      setGuestLoading(false);
     }
   };
 
@@ -64,6 +78,14 @@ const LoginPage = () => {
             Log in
           </button>
         </form>
+
+        <div className="auth-divider">
+          <span>or</span>
+        </div>
+
+        <button type="button" className="btn-secondary" onClick={handleGuest} disabled={guestLoading}>
+          {guestLoading ? 'Setting up your guest session...' : 'Try it without signing up'}
+        </button>
 
         <p className="auth-switch">
           No account? <Link to="/register">Register</Link>

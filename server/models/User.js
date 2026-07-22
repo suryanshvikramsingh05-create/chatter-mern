@@ -28,8 +28,20 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    isGuest: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
+);
+
+// Guest accounts are throwaway "try it without signing up" sessions; expire
+// them a day after creation so they don't pile up. Real accounts are
+// untouched since the filter only matches isGuest: true.
+userSchema.index(
+  { createdAt: 1 },
+  { expireAfterSeconds: 60 * 60 * 24, partialFilterExpression: { isGuest: true } }
 );
 
 userSchema.pre('save', async function () {
