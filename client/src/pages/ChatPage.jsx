@@ -166,7 +166,7 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="chat-page">
+    <div className={`chat-page ${selectedChat ? 'chat-open' : ''}`}>
       <aside className="sidebar">
         {user.isGuest && (
           <div className="guest-banner">
@@ -201,6 +201,7 @@ const ChatPage = () => {
         currentUserId={user._id}
         onSendMessage={handleSendMessage}
         onTyping={handleTyping}
+        onBack={() => setSelectedChat(null)}
         typingUser={typingUser}
         onlineUsers={onlineUsers}
         hasMoreMessages={hasMoreMessages}

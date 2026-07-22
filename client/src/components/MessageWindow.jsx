@@ -18,6 +18,7 @@ const MessageWindow = ({
   currentUserId,
   onSendMessage,
   onTyping,
+  onBack,
   typingUser,
   onlineUsers,
   hasMoreMessages,
@@ -54,12 +55,17 @@ const MessageWindow = ({
   return (
     <div className="message-window">
       <div className="message-window-header">
-        <h2>{getChatName(chat, currentUserId)}</h2>
-        {otherUser && (
-          <span className="status">
-            {isOtherOnline ? 'online' : formatLastSeen(otherUser.lastSeen)}
-          </span>
-        )}
+        <button type="button" className="back-to-chats" onClick={onBack} aria-label="Back to chats">
+          ←
+        </button>
+        <div className="message-window-header-info">
+          <h2>{getChatName(chat, currentUserId)}</h2>
+          {otherUser && (
+            <span className="status">
+              {isOtherOnline ? 'online' : formatLastSeen(otherUser.lastSeen)}
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="messages">

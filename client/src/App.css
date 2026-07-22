@@ -206,14 +206,18 @@
 .chat-page {
   display: flex;
   height: 100vh;
+  height: 100dvh;
+  background: var(--bg);
 }
 
 .sidebar {
   width: 300px;
-  border-right: 1px solid #ddd;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  background: var(--bg-raised);
 }
 
 .sidebar-header {
@@ -221,7 +225,22 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border);
+}
+
+.back-to-chats {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--text-h);
+  font-size: 1.2rem;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .guest-banner {
@@ -245,7 +264,7 @@
 
 .user-search {
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border);
 }
 
 .user-search input {
@@ -256,10 +275,11 @@
 .search-result {
   padding: 0.5rem;
   cursor: pointer;
+  border-radius: 6px;
 }
 
 .search-result:hover {
-  background: #f0f0f0;
+  background: var(--hover-bg);
 }
 
 .chat-list {
@@ -277,7 +297,7 @@
 
 .chat-list-item:hover,
 .chat-list-item.active {
-  background: #f0f0f0;
+  background: var(--hover-bg);
 }
 
 .chat-list-item .name {
@@ -286,29 +306,34 @@
 
 .chat-list-item .preview {
   font-size: 0.85rem;
-  color: #666;
+  color: var(--text);
 }
 
 .empty {
-  color: #888;
+  color: var(--text);
   font-size: 0.9rem;
 }
 
 .message-window {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
+  background: var(--bg);
 }
 
 .message-window.empty-state {
   align-items: center;
   justify-content: center;
-  color: #888;
+  color: var(--text);
 }
 
 .message-window-header {
+  display: flex;
+  align-items: center;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-raised);
 }
 
 .messages {
@@ -324,7 +349,7 @@
   max-width: 60%;
   padding: 0.5rem 0.75rem;
   border-radius: 8px;
-  background: #f0f0f0;
+  background: var(--incoming-bg);
   align-self: flex-start;
 }
 
@@ -337,7 +362,7 @@
   display: block;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #555;
+  color: var(--text);
 }
 
 .message .receipt {
@@ -348,15 +373,16 @@
   margin-top: 0.15rem;
 }
 
-.message-window-header {
+.message-window-header-info {
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
+  min-width: 0;
 }
 
 .message-window-header .status {
   font-size: 0.8rem;
-  color: #888;
+  color: var(--text);
 }
 
 .online-dot {
@@ -377,14 +403,15 @@
 
 .typing-indicator {
   font-size: 0.85rem;
-  color: #888;
+  color: var(--text);
 }
 
 .message-input {
   display: flex;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--border);
+  background: var(--bg-raised);
 }
 
 .message-input input {
@@ -421,10 +448,11 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(26, 43, 60, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
 }
 
 .modal {
@@ -432,10 +460,12 @@
   flex-direction: column;
   gap: 0.75rem;
   width: 360px;
+  max-width: 100%;
   padding: 1.5rem;
-  background: #fff;
+  background: var(--bg-raised);
   border-radius: 8px;
-  color: #111;
+  color: var(--text-h);
+  box-shadow: var(--shadow);
 }
 
 .modal input {
@@ -466,4 +496,58 @@
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .chat-page {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .sidebar,
+  .message-window {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .chat-page:not(.chat-open) .message-window {
+    display: none;
+  }
+
+  .chat-page.chat-open .sidebar {
+    display: none;
+  }
+
+  .back-to-chats {
+    display: flex;
+  }
+
+  .message {
+    max-width: 80%;
+  }
+
+  .sidebar-header {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .sidebar-header button {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .message-input {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .message-input input {
+    font-size: 16px;
+  }
+
+  .modal {
+    padding: 1.25rem;
+  }
 }
